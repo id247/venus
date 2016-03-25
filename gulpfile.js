@@ -1,163 +1,184 @@
+var fs = require('fs');
 var gulp = require('gulp');
-var watch = require('gulp-watch');
-var sass = require('gulp-sass');
+var gulpIf = require('gulp-if');
+var md5File = require('md5-file');
+var replace = require('gulp-replace');
+var del = require('del');
 
+
+var sass = require('gulp-sass');
+var sourcemaps = require('gulp-sourcemaps');
 var minifyCss = require('gulp-minify-css');
 var spritesmith = require('gulp.spritesmith');
 var autoprefixer = require('gulp-autoprefixer');
-var server = require('gulp-server-livereload');
-var fileinclude = require('gulp-file-include');
-var strip = require('gulp-strip-comments');
 var cssImageDimensions = require("gulp-css-image-dimensions");
+
+
+var server = require('gulp-server-livereload');
+var watch = require('gulp-watch');
+
+var fileinclude = require('gulp-file-include');
+var htmlmin = require('gulp-htmlmin');
 
 var gutil = require("gulp-util");
 var webpack = require("webpack");
 var webpackConfig = require("./webpack.config.js");
 
 
-var runSequence = require('run-sequence');
-
-var md5File = require('md5-file')
-
-var replace = require('gulp-replace');
+const isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV == 'development';
 
 
-gulp.task('buildCss', function(callback) {
-  runSequence('sass',
-              //'cssversion',
-              callback);
+gulp.task('clean', function() {
+	return del('public');
 });
 
-gulp.task('buildJs', function(callback) {
-  runSequence('webpack',
-              //'jsversion',
-              callback);
-});
 
-gulp.task('buildHtml', function(callback) {
-  runSequence('include',
-              //'cssversion',
-              //'jsversion',
-              callback);
-});
-
-//compile sass
+// SASS
 gulp.task('sass', function () {
-    gulp.src('./sass/style.scss')
-    .pipe(sass({outputStyle: 'expanded'})) // Converts Sass to CSS with gulp-sass      
-    .on('error', console.log)
-    .pipe(gulp.dest('./app/css'))
-    .pipe(autoprefixer({
-        browsers: ['> 1%'],
-        cascade: false
-    }))
-    .on('error', console.log)
-    .pipe(cssImageDimensions(''))
-    .on('error', console.log)
-    .pipe(minifyCss({compatibility: 'ie8'}))
-    .pipe(gulp.dest('./app/css'));
-  
+
+	var cssVer = new Date().getTime();
+
+	return gulp.src('src/sass/style.scss')
+		.pipe(gulpIf(isDevelopment, sourcemaps.init())) 
+		.pipe(sass({outputStyle: 'expanded'})) 
+		.on('error', console.log)
+		.pipe(autoprefixer({
+			browsers: ['> 1%'],
+			cascade: false
+		}))
+		.pipe(cssImageDimensions())
+		.pipe(replace('.png', '.png?_v=' + cssVer ))
+		.pipe(replace('.jpg', '.jpg?_v=' + cssVer ))
+		.pipe(replace('.gif', '.gif?_v=' + cssVer ))
+		.pipe(gulpIf(!isDevelopment, minifyCss({compatibility: 'ie8'})))
+		.pipe(gulpIf(isDevelopment, sourcemaps.write())) 
+		.pipe(gulp.dest('public/assets/css'));  
 });
 
-//autoprefixer
-gulp.task('autoprefixer', function () {
-    gulp.src('./app/css/style.css')
-    .pipe(autoprefixer({
-        browsers: ['> 1%'],
-        cascade: false
-    }))
-    .pipe(gulp.dest('./app/css'));
+
+
+// SPRITES
+gulp.task('sprite', function(callback) {
+	var spriteData = 
+		gulp.src('src/assets/sprite/*.png') // путь, откуда берем картинки для спрайта
+		.pipe(spritesmith({
+			imgName: 'sprite.png',
+			cssName: '_sprites.scss',
+			imgPath: '../images/sprite.png' 
+		}));
+
+	spriteData.img.pipe(gulp.dest('public/assets/images/')); // путь, куда сохраняем картинку
+	spriteData.css.pipe(gulp.dest('src/sass/'));
+
+	callback();
 });
 
-// generate sprite.png and _sprite.scss
-gulp.task('sprite', function() {
-    var spriteData = 
-        gulp.src('./app/images/sprite/*.png') // путь, откуда берем картинки для спрайта
-        .pipe(spritesmith({
-            imgName: 'sprite.png',
-            cssName: '_sprites.scss',
-            imgPath: '../images/sprite.png' 
-        }));
-
-    spriteData.img.pipe(gulp.dest('./app/images/')); // путь, куда сохраняем картинку
-    spriteData.css.pipe(gulp.dest('./sass/'))
+// ASSETS
+gulp.task('assets-images', function(){
+	return gulp.src('src/assets/images', {since: gulp.lastRun('assets-images')})
+		.pipe(gulp.dest('public/assets'))
 });
 
-// include htmls
-gulp.task('include', function() {
-
-    gulp.src(['html/*.html', '!html/_*.html', '!html/* *.html'])
-    .pipe(fileinclude({
-        prefix: '@@',
-        basepath: '@file',
-        indent: true
-    }))
-    .on('error', console.log)   
-    .pipe(gulp.dest('./app'));
+gulp.task('assets-fonts', function(){
+	return gulp.src('src/assets/fonts', {since: gulp.lastRun('assets-fonts')})
+		.pipe(gulp.dest('public/assets'))
 });
+
+gulp.task('assets-favicon', function(){
+	return gulp.src('src/assets/favicon.ico', {since: gulp.lastRun('assets-favicon')})
+		.pipe(gulp.dest('public/local'))
+});
+
+
+
+gulp.task('assets', gulp.parallel('assets-images', 'assets-fonts', 'assets-favicon'));
+
+
+
+// HTML
+gulp.task('html', function() {
+
+	return gulp.src(['src/html/{local,dnevnik,mosreg}/*.html'])
+		.pipe(fileinclude({
+			prefix: '@@',
+			basepath: '@file',
+			indent: true
+		}))
+		.on('error', console.log) 
+		.pipe(gulpIf(function(file){ //if not local - htmlmin it
+			return file.path.indexOf('/local/') === -1;
+		}, htmlmin({collapseWhitespace: true})))
+		.pipe(gulp.dest('public'));
+});
+
+
+// BUILD
+gulp.task('build', 
+	gulp.series(
+		'clean', 
+		gulp.parallel('sass', 'assets', 'html')
+	)
+);
+
+gulp.task('server', function () {
+	gulp.src('public/local')
+	.pipe(server({
+		livereload: true,
+		directoryListing: false,
+		open: false,
+		port: 9000
+	}));
+})
+
+gulp.task('watch', function(){
+	gulp.watch('src/sass/**/*.scss', gulp.series('sass'));
+	gulp.watch('src/assets/sprite/*.png', gulp.series('sprite'));
+	//gulp.watch(['src/js/**/*.js', './my_modules/**/*.js', './js/**/*.hbs'], gulp.series('buildJs'));
+	gulp.watch('src/html/**/*.html', gulp.series('html'));
+});
+
+
+gulp.task('dev', gulp.series('build', gulp.parallel('watch', 'server')));
+
+
+
+
 
 //set new css and js versions
 gulp.task('vers', function(){
 
-    var cssVer =  md5File('./app/css/style.css');
+	var cssVer =  fs.existsSync('public/assets/css/style.css') && md5File('public/assets/css/style.css');
+	var dnevnikVer =  fs.existsSync('public/assets/js/dnevnik.js') && md5File('public/assets/js/dnevnik.js');
+	var mosregVer =  fs.existsSync('public/assets/js/mosreg.js') && md5File('public/assets/js/mosreg.js');
 
-    var localVer =  md5File('./app/js/local.js');
-    var dnevnikVer =  md5File('./app/js/dnevnik.js');
-    var mosregVer =  md5File('./app/js/mosreg.js');
+	return gulp.src(['public/{dnevnik,mosreg}/*.html'])
+		.pipe(gulpIf(!!cssVer, replace( /style\.css(\S*)\"/g, 'style.css?_v=' + cssVer + '"' )))
+		.pipe(gulpIf(!!dnevnikVer, replace( /dnevnik\.js(\S*)\"/g, 'dnevnik.js?_v=' + dnevnikVer + '"' )))
+		.pipe(gulpIf(!!mosregVer, replace( /mosreg\.js(\S*)\"/g, 'mosreg.js?_v=' + mosregVer + '"' )))
+		.pipe(gulpIf(!!cssVer, replace( /\.png(\S*)\"/g, '.png?_v=' + cssVer + '"')))
+		.pipe(gulpIf(!!cssVer, replace( /\.jpg(\S*)\"/g, '.jpg?_v=' + cssVer + '"')))
+		.pipe(gulpIf(!!cssVer, replace( /\.gif(\S*)\"/g, '.gif?_v=' + cssVer + '"')))
+		.on('error', console.log)
+		.pipe(gulp.dest('public'));
 
-    gulp.src(['./app/*.html'])
-    .pipe(replace( /style\.css(\S*)\"/g, 'style.css?_v=' + cssVer + '"' ))
-    .pipe(replace( /local\.js(\S*)\"/g, 'local.js?_v=' + localVer + '"' ))
-    .pipe(replace( /dnevnik\.js(\S*)\"/g, 'dnevnik.js?_v=' + dnevnikVer + '"' ))
-    .pipe(replace( /mosreg\.js(\S*)\"/g, 'mosreg.js?_v=' + mosregVer + '"' ))
-    .pipe(replace( /\.png(\S*)\"/g, '.png?_v=' + cssVer + '"'))
-    .pipe(replace( /\.jpg(\S*)\"/g, '.jpg?_v=' + cssVer + '"'))
-    .pipe(replace( /\.gif(\S*)\"/g, '.gif?_v=' + cssVer + '"'))
-    .on('error', console.log)
-    .pipe(gulp.dest('./app'));
-
-});
-
-//set new img versions in css
-gulp.task('imgver', function(){
-
-    var cssVer =  md5File('./app/css/style.css');
-
-    gulp.src(['./app/css/style.css'])
-    .pipe(replace( /\.png/g, '.png?_v=' + cssVer ))
-    .pipe(replace( /\.jpg/g, '.jpg?_v=' + cssVer ))
-    .pipe(replace( /\.gif/g, '.gif?_v=' + cssVer ))
-    .pipe(gulp.dest('./app/css'));
 });
 
 
 gulp.task("webpack", function(callback) {
-    // run webpack
-    var myConfig = Object.create(webpackConfig);
-    myConfig.devtool = "eval";
-    myConfig.debug = true;
-    myConfig.devtool = 'source-map';
+	// run webpack
+	var myConfig = Object.create(webpackConfig);
+	myConfig.devtool = "eval";
+	myConfig.debug = true;
+	myConfig.devtool = 'source-map';
 
-    webpack(myConfig, 
-    function(err, stats) {
-        if(err) throw new gutil.PluginError("webpack", err);
-        gutil.log("[webpack]", stats.toString({
-            // output options
-        }));
-        callback();
-    });
+	webpack(myConfig, 
+	function(err, stats) {
+		if(err) throw new gutil.PluginError("webpack", err);
+		gutil.log("[webpack]", stats.toString({
+			// output options
+		}));
+		callback();
+	});
 });
 
-gulp.task('default', function () {
-    gulp.src('./app')
-    .pipe(server({
-        livereload: true,
-        directoryListing: false,
-        open: false,
-        port: 9000
-    }));
-    gulp.watch('./sass/**/*.scss', ['buildCss']);
-    gulp.watch('./app/images/sprite/*.png', ['sprite']);
-    gulp.watch(['./js/**/*.js', './my_modules/**/*.js', './js/**/*.hbs'], ['buildJs']);
-    gulp.watch('./html/**/*.html', ['buildHtml']);
-});
+

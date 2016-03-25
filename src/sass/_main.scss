@@ -9,13 +9,8 @@ html{
 	text-size-adjust: none;
 	font-size: 16px;
 	line-height: 1.2;
-	font-family: $ubuntu;
+	font-family: $mainFontFamily;
 	color: $text;
-}
-
-body{
-	padding: 0 0 65px;
-	background: #7bb2f2 url(../images/bg/body.jpg) 0 0 repeat;
 }
 
 a{
@@ -31,10 +26,6 @@ a{
 	transition: all .3s;
 	&:hover{
 		border-color: transparent;
-	}
-
-	&--blue{
-		color: $blue;
 	}
 }
 
@@ -77,12 +68,6 @@ sup{
 	line-height: (24/16);
 }
 
-
-@keyframes spin{
-	0% { transform: rotate(0)}
-	100% { transform: rotate(360deg)}
-}
-
 /* ==========================================================================
  * Layout
  * ========================================================================== */
@@ -90,22 +75,12 @@ sup{
 .body-container{
 	overflow: hidden;
 	position: relative;
-
-	&__content{
-		background: #fff;
-		box-shadow: 0 0 30px rgba(0,0,0,.3);	
-		width: 1020px;
-		margin: 0 auto;
-		min-height: 100vh;
-		position: relative;
-		border-bottom: 1px solid #fff;
-
-	}
 }
 
-.wrap{
-	@include clearfix;
-	margin: auto;
-	padding: 0 0px;
-	width: 980px;
-}
+/* ==========================================================================
+ * main
+ * ========================================================================== */
+
+
+
+ 
