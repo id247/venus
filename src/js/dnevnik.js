@@ -15,13 +15,6 @@ const appSettings = {
 		modalRedirectUrl: '//ad.dnevnik.ru/promo/oauth',
 		redirectUrl: '//ad.dnevnik.ru/promo/cycloferon-calendar',
 		develop: true
-	},
-
-	calendar: {
-		cdn: 'https://ad.csdnevnik.ru/special/staging/calendar/',
-		groupLink: 'https://groups.dnevnik.ru/group.aspx?group=316373',
-		folderLink: 'https://groups.dnevnik.ru/group.aspx?group=316373&view=files&folder=2631891',
-		develop: true
 	}
 }
 

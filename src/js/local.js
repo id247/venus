@@ -15,13 +15,6 @@ const appSettings = {
 		modalRedirectUrl: '//localhost:9000/oauth.html',
 		redirectUrl: '//localhost:9000/',
 		develop: true
-	},
-
-	calendar: {
-		cdn: '',
-		groupLink: 'https://groups.dnevnik.ru/group.aspx?group=316373',
-		folderLink: 'https://groups.dnevnik.ru/group.aspx?group=316373&view=files&folder=2631891',
-		develop: true
 	}
 }
 
