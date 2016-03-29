@@ -6,6 +6,8 @@ var gulp = require('gulp');
 var gulpIf = require('gulp-if');
 var md5File = require('md5-file');
 var replace = require('gulp-replace');
+var buffer = require('gulp-buffer');
+var revHash = require('rev-hash');
 
 var newer = require('gulp-newer');
 var notify = require('gulp-notify');
@@ -58,7 +60,10 @@ gulp.task('modifyCssUrls', function () {
 
 	return gulp.src('public/assets/css/style.css')
 		.pipe(modifyCssUrls({
-			append: '?_v=' + date
+			modify: function (url, filePath) {
+				var buffer = fs.readFileSync(url.replace('../', 'public/assets/'));				
+	        	return url + '?_v=' + revHash(buffer);
+	      	},
 		}))		
 		.pipe(minifyCss({compatibility: 'ie8'}))
     	.pipe(gulp.dest('public/assets/css'));
@@ -68,7 +73,7 @@ gulp.task('modifyCssUrls', function () {
 
 // ASSETS
 gulp.task('assets-files', function(){
-	return gulp.src('src/assets/{images,fonts}', {since: gulp.lastRun('assets-files')})
+	return gulp.src('src/assets/{images,fonts}/*.*', {since: gulp.lastRun('assets-files')})
 		.pipe(newer('public/assets'))
 		.pipe(gulp.dest('public/assets'))
 });
@@ -81,17 +86,22 @@ gulp.task('assets-favicon', function(){
 });
 
 gulp.task('sprite', function(callback) {
+
 	var spriteData = 
 		gulp.src('src/assets/sprite/*.png') // путь, откуда берем картинки для спрайта
 		.pipe(spritesmith({
 			imgName: 'sprite.png',
 			cssName: '_sprites.scss',
-			imgPath: '../images/sprite.png' 
+			imgPath: '../images/sprite.png'
 		}))
-		.on('error', notify.onError());
+		.on('error', notify.onError())
+		
 
-	spriteData.img.pipe(gulp.dest('public/assets/images/')); // путь, куда сохраняем картинку
+	spriteData.img
+		.pipe(gulp.dest('public/assets/images/'))
+
 	spriteData.css.pipe(gulp.dest('src/sass/'));
+
 
 	callback();
 });
@@ -122,12 +132,14 @@ gulp.task('html', function() {
 
 
 
+
 //set new css and js versions
 gulp.task('vers', function(){
+		
 
-	var cssVer =  fs.existsSync('public/assets/css/style.css') && md5File('public/assets/css/style.css');
-	var dnevnikVer =  fs.existsSync('public/assets/js/dnevnik.js') && md5File('public/assets/js/dnevnik.js');
-	var mosregVer =  fs.existsSync('public/assets/js/mosreg.js') && md5File('public/assets/js/mosreg.js');
+	var cssVer =  fs.existsSync('public/assets/css/style.css') && revHash(fs.readFileSync('public/assets/css/style.css'));
+	var dnevnikVer =  fs.existsSync('public/assets/js/dnevnik.js') && revHash(fs.readFileSync('public/assets/js/dnevnik.js'));
+	var mosregVer =  fs.existsSync('public/assets/js/mosreg.js') && revHash(fs.readFileSync('public/assets/js/mosreg.js'));
 
 	return gulp.src(['public/{dnevnik,mosreg}/*.html'])
 		.pipe(gulpIf(!!cssVer, replace( /style\.css(\S*)\"/g, 'style.css?_v=' + cssVer + '"' )))
@@ -217,6 +229,8 @@ gulp.task('build',
 );
 
 gulp.task('prod', gulp.series('build', 'modifyCssUrls', 'vers'));
+
+gulp.task('prod-fast', gulp.series('assets', 'sass', 'html', 'modifyCssUrls', 'vers'));
 
 gulp.task('default', gulp.parallel('server', 'watch'));
 
