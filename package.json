@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "gulpfile.js",
-  "dependencies": {
-    "rev-hash": "^1.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-core": "^5.8.34",
     "babel-loader": "^5.4.0",
@@ -26,7 +24,6 @@
     "gulp-newer": "^1.1.0",
     "gulp-notify": "^2.2.0",
     "gulp-replace": "latest",
-    "gulp-rev-hash": "0.0.2",
     "gulp-sass": "latest",
     "gulp-server-livereload": "latest",
     "gulp-sourcemaps": "latest",
@@ -34,6 +31,7 @@
     "gulp-watch": "latest",
     "gulp.spritesmith": "latest",
     "md5-file": "latest",
+    "rev-hash": "^1.0.0",
     "webpack": "latest"
   },
   "scripts": {

@@ -17,8 +17,8 @@ var minifyCss = require('gulp-minify-css');
 var sourcemaps = require('gulp-sourcemaps');
 var spritesmith = require('gulp.spritesmith');
 var autoprefixer = require('gulp-autoprefixer');
-var modifyCssUrls = require("gulp-modify-css-urls");
-var cssImageDimensions = require("gulp-css-image-dimensions");
+var modifyCssUrls = require('gulp-modify-css-urls');
+var cssImageDimensions = require('gulp-css-image-dimensions');
 
 var watch = require('gulp-watch');
 var server = require('gulp-server-livereload');
@@ -26,9 +26,9 @@ var server = require('gulp-server-livereload');
 var htmlmin = require('gulp-htmlmin');
 var fileinclude = require('gulp-file-include');
 
-var gutil = require("gulp-util");
-var webpack = require("webpack");
-var webpackConfig = require("./webpack.config.js");
+var gutil = require('gulp-util');
+var webpack = require('webpack');
+var webpackConfig = require('./webpack.config.js');
 
 var isDevelopment = process.env.NODE_ENV !== 'production' ? true : false;
 
@@ -114,7 +114,7 @@ gulp.task('assets', gulp.parallel('assets-files', 'assets-favicon', 'sprite'));
 // HTML
 gulp.task('html', function() {
 
-	return gulp.src(['src/html/{local,dnevnik,mosreg}/*.html', 'src/html/oauth.html'])
+	return gulp.src(['src/html/{local,dnevnik,mosreg}/**/*.html', 'src/html/oauth.html'])
 		.pipe(fileinclude({
 			prefix: '@@',
 			basepath: '@file',
@@ -232,7 +232,7 @@ gulp.task('prod', gulp.series('build', 'modifyCssUrls', 'vers'));
 
 gulp.task('prod-fast', gulp.series('assets', 'sass', 'html', 'modifyCssUrls', 'vers'));
 
-gulp.task('default', gulp.parallel('server', 'watch'));
+gulp.task('default', gulp.series( 'build', gulp.parallel('server', 'watch')));
 
 
 
