@@ -73,7 +73,7 @@ gulp.task('modifyCssUrls', function () {
 
 // ASSETS
 gulp.task('assets-files', function(){
-	return gulp.src('src/assets/{images,fonts}/*.*', {since: gulp.lastRun('assets-files')})
+	return gulp.src('src/assets/{images,fonts}/**/*.*', {since: gulp.lastRun('assets-files')})
 		.pipe(newer('public/assets'))
 		.pipe(gulp.dest('public/assets'))
 });
