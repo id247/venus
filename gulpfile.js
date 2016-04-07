@@ -41,7 +41,7 @@ gulp.task('sass', function () {
 
 	const date = new Date().getTime();
 
-	return gulp.src('src/sass/style.scss')
+	return gulp.src('src/sass/__style.scss')
 		.pipe(gulpIf(isDevelopment, sourcemaps.init())) 
 		.pipe(sass({outputStyle: 'expanded'})) 
 		.on('error', notify.onError())

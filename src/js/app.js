@@ -2,7 +2,6 @@
 
 import 'babel-polyfill';
 
-
 const app = ( () => {
 
 	function init(){
@@ -13,7 +12,5 @@ const app = ( () => {
 		init: init
 	}
 })();
-
-
 
 export default app;
