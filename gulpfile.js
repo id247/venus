@@ -155,7 +155,7 @@ gulp.task('vers', function(){
 
 
 
-gulp.task("webpack", function(callback) {
+gulp.task('webpack', function(callback) {
     
     var myConfig = Object.create(webpackConfig);
 
@@ -165,8 +165,8 @@ gulp.task("webpack", function(callback) {
 	    
 	    myConfig.plugins = [      
 	        new webpack.DefinePlugin({
-	            "process.env": { 
-	                NODE_ENV : JSON.stringify("development") 
+	            'process.env': { 
+	                NODE_ENV : JSON.stringify('development') 
 	            }
 	        })
 	    ];
@@ -175,8 +175,8 @@ gulp.task("webpack", function(callback) {
 
 	    myConfig.plugins = [      
 	        new webpack.DefinePlugin({
-	            "process.env": { 
-	                NODE_ENV : JSON.stringify("production") 
+	            'process.env': { 
+	                NODE_ENV : JSON.stringify('production') 
 	            }
 	        }),
 	        new webpack.optimize.UglifyJsPlugin({
@@ -191,8 +191,8 @@ gulp.task("webpack", function(callback) {
 
     webpack(myConfig, 
     function(err, stats) {
-        if(err) throw new gutil.PluginError("webpack", err);
-        gutil.log("[webpack]", stats.toString({
+        if(err) throw new gutil.PluginError('webpack', err);
+        gutil.log('[webpack]', stats.toString({
             // output options
         }));
         callback();
