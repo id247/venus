@@ -2,7 +2,9 @@
 
 import 'babel-polyfill';
 
+
 const app = ( () => {
+
 	function init(){
 
 	}
