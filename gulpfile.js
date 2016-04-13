@@ -41,7 +41,7 @@ gulp.task('sass', function () {
 
 	const date = new Date().getTime();
 
-	return gulp.src('src/sass/__style.scss')
+	return gulp.src('src/sass/style.scss')
 		.pipe(gulpIf(isDevelopment, sourcemaps.init())) 
 		.pipe(sass({outputStyle: 'expanded'})) 
 		.on('error', notify.onError())
@@ -161,7 +161,7 @@ gulp.task('webpack', function(callback) {
 
     if (isDevelopment){
 
-	    myConfig.devtool = 'eval';
+	    myConfig.devtool = 'cheap-module-eval-source-map';
 	    
 	    myConfig.plugins = [      
 	        new webpack.DefinePlugin({
