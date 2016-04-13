@@ -14,7 +14,7 @@
 	transition: all .3s;
 	line-height: 1;
 
-	font-family: $mainFontFamily;
+	font-family: $shadow;
 
 	cursor: pointer;
 
@@ -38,11 +38,58 @@
 		}
 	}
 
+	&--yellow{
+		background: #ffd33b;
+		color: #fff;
+
+		text-shadow: 1px 1px 0 #c27700;
+
+		box-shadow: 3px 3px 0 #c27700,
+					0px 3px 0 #c27700,
+					3px 0px 0 #c27700;
+
+		transition: backgrouns .2s;
+
+		&:hover{
+			background: lighten(#ffd33b, 5%);
+		}
+		&:active{
+			background: darken(#ffd33b, 5%);
+			box-shadow: 1px 1px 0 #c27700,
+						0px 1px 0 #c27700,
+						1px 0px 0 #c27700;
+			position: relative;
+			top: 2px;
+			left: 2px;
+		}
+
+
+		&:disabled{
+			background: #ccc;
+			color: #e9e9e9;
+			box-shadow: 3px 3px 0 #aaa,
+						0px 3px 0 #aaa,
+						3px 0px 0 #aaa;
+			text-shadow: 1px 1px 0 #aaa;
+			cursor: default;
+			&:hover{
+				background: #ccc;
+			}
+		}
+	}
+
 	&--m{
 		border-radius: 8px;
-		font-weight: 700;
-		font-size: 12px;
-		padding: 8px 20px 8px;
+		font-weight: 400;
+		font-size: 41px;
+		padding: 19px 30px 15px;
+
+
+
+		@media (max-height: $min-height){
+			font-size: 33px;
+			padding: 14px 20px 10px;
+		}
 	}
 
 	&--l{
@@ -145,12 +192,52 @@
  * checkbox
  * ========================================================================== */
 
-.checkbox{
-	display: inline-block;
+.radio{
 	position: relative;
+	cursor: pointer;
+
+	line-height: 1;
+	//min-height: 40px;
+	display: inline-block;
+	padding: 0;
+
+	&--multiline{
+		.bur-radio__text{
+			padding-top: 0;
+		}
+	}
 
 	&__input{
-		margin: -2px 0 0;
+		position: absolute;
+		left: -9999px;
+		top: 0;
 
+		&:checked + .radio__text:before{
+			@include sprite($radio-checked);
+		}
 	}
+
+	&__text{
+		display: inline-block;
+		vertical-align: middle;
+		//font-size: 18px;
+		line-height: (22/18);
+		padding: 2px 0 0 46px;
+		box-sizing: border-box;
+		color: $text;
+
+		&:before{
+			box-sizing: border-box;
+			content: '';
+			display: block;
+
+			@include sprite($radio);
+
+			position: absolute;
+			top: 0px;
+			left: 6px;
+		}
+	}
+
+
 }

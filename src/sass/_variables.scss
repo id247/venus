@@ -1,25 +1,30 @@
 @charset "UTF-8";
 
-// @font-face {
-//     font-family: 'font';
-//     src: url('../fonts/fonr.woff') format('woff');
-//     font-weight: normal;
-//     font-style: normal;
-// }
+@font-face {
+    font-family: 'Shadow';
+    src: url('../fonts/Shadow-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 
 
-$mainFontFamily: Helvetica, sans-serif;
+$mainFontFamily: 'Helvetica Neue', Helvetica, sans-serif;
+$shadow: 'Shadow', sans-serif;
 
 //
 //colors
 //
 
-
-$text: #1c1c1c;
+$blue: #044073;
+$blue-light: #1162a7;
+$text: $blue;
 
 //
 //medias
 //
+
+$mid-height: 800px;
+$min-height: 700px;
 
 //@media #{$media-xs-max} {
 // 	background: red;
