@@ -86,8 +86,13 @@
 
 
 
-		@media (max-height: $min-height){
+		@media (max-height: $mid-height){
 			font-size: 33px;
+			padding: 14px 20px 10px;
+		}
+
+		@media (max-height: $min-height){
+			font-size: 28px;
 			padding: 14px 20px 10px;
 		}
 	}

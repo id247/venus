@@ -29,7 +29,8 @@ const app = (settings) => {
 			addChangeListener(this._update);
 
 			emit(actions.SET_SETTINGS, {
-				settings: this.props.settings			
+				settings: this.props.settings,
+				page: 'greeting'			
 			});
 		},
 		_update() {
@@ -39,7 +40,6 @@ const app = (settings) => {
 		render() {
 
 			console.log('RENDER');
-			console.log(this.state);
 
 			let page;
 
@@ -47,16 +47,19 @@ const app = (settings) => {
 				case 'greeting': page = <Greeting />; 
 					break;
 
-				case 'sex': page = <Sex buttons={this.state.buttons} />; 
+				case 'sex': page = <Sex buttons={this.state.buttons} 	
+										/>; 
 					break;
 
-				case 'loading': page = <Loading />; 
+				case 'quiz': page = <Quiz 	questions={this.state.questions[this.state.sex]} 
+											step={this.state.quiz.step} 
+											/>; 
 					break;
 
-				case 'quiz': page = <Quiz questions={this.state.questions[this.state.sex]} step={this.state.quiz.step} />; 
-					break;
-
-				case 'result': page = <Result result={this.state.results[this.state.sex][this.state.quiz.result]} />; 
+				case 'result': page = <Result 	pers={this.state.pers}
+												server={this.state.settings.server}
+												shares={this.state.shares}
+												/>; 
 					break;
 
 				default: page = <ErrorPage />;
@@ -65,6 +68,7 @@ const app = (settings) => {
 			return (
 				<div>
 					{page}
+					<Loading show={this.state.loading} />
 				</div>
 			)
 		}

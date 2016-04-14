@@ -18,7 +18,10 @@ const Greeting = React.createClass({
 				<div className="app__content">
 					
 					<div className="app__text app__text--center text">
-						
+						<br/>
+						<br/>
+						<br/>
+						<br/>
 						<p>
 							Мудрый вожак стаи, кроткая овечка, решительная волчица или волк-балагур&nbsp;&mdash; хочешь знать, на&nbsp;кого из&nbsp;героев нового мультфильма &laquo;<strong>Волки и&nbsp;овцы: бе-е-е-зумное превращение</strong>&raquo; ты&nbsp;больше всего похож?
 						</p>

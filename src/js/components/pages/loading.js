@@ -5,9 +5,9 @@ const Loading = React.createClass({
 
 	render: function() {
 		return (
-			<div className="app__page">
+			<div className="app__loader loader" style={{ display: (this.props.show ? 'block' : 'none')}}>
 			
-				<div className="app__loader" onClick={this._click}></div>
+				<div className="loader__figure"></div>
 
 			</div>
 		);
