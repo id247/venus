@@ -71,7 +71,6 @@ listen(actions.SET_SEX, (sex) => {
 		sex: sex
 	});
 
-	notify();
 });
 
 

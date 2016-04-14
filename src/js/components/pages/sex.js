@@ -14,7 +14,13 @@ const Sex = React.createClass({
 	_nextPage: function(e){
 		e.preventDefault();
 		
-		const sex = e.target.elements.sex.value;
+		let sex;
+
+		[].forEach.call(e.target.elements.sex, (element) => {
+			if (element.checked == true) {
+				sex = element.value;
+			}
+		})
 
 		emit(actions.SET_SEX, sex);
 		emit(actions.SHOW_PAGE, 'quiz');

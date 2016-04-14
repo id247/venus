@@ -15,7 +15,14 @@ const Quiz = React.createClass({
 	_answer: function(e){
 		e.preventDefault();
 
-		const answer = e.target.elements.answer.value;
+		let answer;
+
+		[].forEach.call(e.target.elements.answer, (element) => {
+			if (element.checked == true) {
+				answer = element.value;
+			}
+		})
+
 		emit(actions.QUIZ_NEXT_STEP, answer);
 	},
 

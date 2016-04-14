@@ -30,7 +30,7 @@ var gutil = require('gulp-util');
 var webpack = require('webpack');
 var webpackConfig = require('./webpack.config.js');
 
-var isDevelopment = process.env.NODE_ENV !== 'production' ? true : false;
+var isDevelopment = process.env.NODE_ENV !== 'prod' ? true : false;
 
 gulp.task('clean', function() {
 	return del('public');
@@ -159,36 +159,6 @@ gulp.task('webpack', function(callback) {
     
     var myConfig = Object.create(webpackConfig);
 
-    if (isDevelopment){
-
-	    myConfig.devtool = 'cheap-module-eval-source-map';
-	    
-	    myConfig.plugins = [      
-	        new webpack.DefinePlugin({
-	            'process.env': { 
-	                NODE_ENV : JSON.stringify('development') 
-	            }
-	        })
-	    ];
-
-    }else{
-
-	    myConfig.plugins = [      
-	        new webpack.DefinePlugin({
-	            'process.env': { 
-	                NODE_ENV : JSON.stringify('production') 
-	            }
-	        }),
-	        new webpack.optimize.UglifyJsPlugin({
-	            minimize: true,
-	            compress: {
-	                warnings: false
-	            }
-	        })
-	    ];
-
-    }
-
     webpack(myConfig, 
     function(err, stats) {
         if(err) throw new gutil.PluginError('webpack', err);
@@ -202,8 +172,6 @@ gulp.task('webpack', function(callback) {
 
 
 // BUILD
-
-
 gulp.task('server', function () {
 	gulp.src('public')
 	.pipe(server({
