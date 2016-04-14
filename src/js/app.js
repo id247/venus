@@ -6,7 +6,6 @@ import { emit } from './lib/dispatcher';
 import actions from './lib/actions';
 import { getState, addChangeListener } from './stores/store';
 
-
 //pages
 import Loading from './components/pages/loading';
 import Greeting from './components/pages/greeting';
@@ -15,7 +14,7 @@ import Quiz from './components/pages/quiz';
 import Result from './components/pages/result';
 import Sex from './components/pages/sex';
 
-//import 'babel-polyfill';
+import 'babel-polyfill';
 
 const app = (settings) => {
 
