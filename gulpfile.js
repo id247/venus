@@ -39,6 +39,7 @@ gulp.task('clean', function() {
 // STYLES
 gulp.task('sass', function () {
 
+
 	const date = new Date().getTime();
 
 	return gulp.src('src/sass/style.scss')

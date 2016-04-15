@@ -4,11 +4,11 @@ import app from './app';
 
 const appSettings = {
 	server: 'school.mosreg.ru',
-	develop: false
+	develop: false,
+	ddd: false,
 }
 
 
-//start the magic
 document.addEventListener('DOMContentLoaded', function() {
 
 	app(appSettings);

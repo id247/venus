@@ -89,15 +89,15 @@ listen(actions.SET_SHARES, (persId) => {
 	const shares = [
 		{
 			id: 'ok',
-			link: 'https://connect.ok.ru/dk?st.cmd=WidgetSharePreview&st.shareUrl=https://ad.dnevnik.ru/promo/wolves-share-' + persId,
+			link: 'https://connect.ok.ru/dk?st.cmd=WidgetSharePreview&st.shareUrl=https://ad.' + state.settings.server + '/promo/wolves-share-' + persId,
 		},
 		{
 			id: 'fb',
-			link: 'https://www.facebook.com/sharer/sharer.php?u=https://ad.dnevnik.ru/promo/wolves-share-' + persId,
+			link: 'https://www.facebook.com/sharer/sharer.php?u=https://ad.' + state.settings.server + '/promo/wolves-share-' + persId,
 		},
 		{
 			id: 'vk',
-			link: 'https://vk.com/share.php?url=https://ad.dnevnik.ru/promo/wolves-share-' + persId,
+			link: 'https://vk.com/share.php?url=https://ad.' + state.settings.server + '/promo/wolves-share-' + persId,
 		}
 	];
 	updateState({shares: shares});	
