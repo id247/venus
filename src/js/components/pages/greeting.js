@@ -13,15 +13,12 @@ const Greeting = React.createClass({
 
 	render: function() {
 		return (
-			<div className="app__page">
+			<div className="app__page greeting">
 
 				<div className="app__content">
 					
-					<div className="app__text app__text--center text">
-						<br/>
-						<br/>
-						<br/>
-						<br/>
+					<div className="app__text greeting__text text">
+
 						<p>
 							Мудрый вожак стаи, кроткая овечка, решительная волчица или волк-балагур&nbsp;&mdash; хочешь знать, на&nbsp;кого из&nbsp;героев нового мультфильма &laquo;<strong>Волки и&nbsp;овцы: бе-е-е-зумное превращение</strong>&raquo; ты&nbsp;больше всего похож?
 						</p>
