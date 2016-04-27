@@ -28,7 +28,7 @@ import ReactSlider from '../lib/react-slider';
 					defaultValue={12} 
 					pearling={true} 
 					min={12} 
-					max={16}
+					max={18}
 					className="slider"
 					handleClassName="slider__handle" 
 					/>
