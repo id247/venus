@@ -35,11 +35,8 @@ const Age = React.createClass({
 
 						<Slider 
 							defaultValue={12} 
-							pearling={true} 
 							min={12} 
 							max={16}
-							className="slider"
-							handleClassName="slider__handle" 
 							/>
 
 					</div>

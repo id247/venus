@@ -1,41 +1,33 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import ReactSlider from '../lib/react-slider';
+import ReactSlider from 'react-slider';
 
-//const Slider = React.createClass({
+const Slider = React.createClass({
 
-	//React.initializeTouchEvents(true);
+	getInitialState: function () {
+		return { value: this.props.defaultValue }
+	},
 
-//	var ReactSlider = React.createFactory(ReactSlider);
+	_onChange: function(value) {
+		this.setState({ value: value });
+	},
 
-	// function map(v, f, context) {
-	// 	return (v && v.map) ? v.map(f, context) : f.call(context, v, 0);
-	// }
+	render() {
+		return (
+			<ReactSlider 
+				defaultValue={this.props.defaultValue} 
+				pearling={true} 
+				min={this.props.min} 
+				max={this.props.max}
+				className="slider"
+				onChange={this._onChange}
+				>
+				<div className="slider__handle">{this.state.value}</div>
+			</ReactSlider>
+		);
+	}
+});
 
-	var Slider = React.createClass({
-		// getInitialState: function () {
-		// 	return { value: this.props.defaultValue }
-		// },
-
-		// onChange: function(value) {
-		// 	this.setState({ value: value });
-		// },
-
-		render() {
-			return (
-				<ReactSlider 
-					defaultValue={12} 
-					pearling={true} 
-					min={12} 
-					max={18}
-					className="slider"
-					handleClassName="slider__handle" 
-					/>
-			);
-		}
-	});
-
-//});
 
 export default Slider;
