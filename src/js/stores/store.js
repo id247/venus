@@ -5,19 +5,20 @@ import actions from '../lib/actions';
 import questions from '../settings/questions';
 import results from '../settings/results';
 
-//helpers
+//helresult
 import { shuffle } from '../lib/helpers';
 
 let state = {
-	page: 'greeting',
+	page: 'quiz',
 	quiz: {
 		step : 0,
 		questionsCount: 0,	
 	},
 	quizAnswers: {},
-	sex: 'boy',
+	sex: 'girl',
 	questions: questions,
 	results: results,
+	result: {},
 	settings: {},
 	loading: false,
 	buttons: {
@@ -81,34 +82,6 @@ listen(actions.SHOW_PAGE, (page) => {
 	}
 	updateState({page: page});	
 	notify();
-});
-
-//shares
-listen(actions.SET_SHARES, (persId) => {
-
-	const shares = [
-		{
-			id: 'ok',
-			link: 'https://connect.ok.ru/dk?st.cmd=WidgetSharePreview&st.shareUrl=https://ad.' + state.settings.server + '/promo/wolves-share-' + persId,
-		},
-		{
-			id: 'fb',
-			link: 'https://www.facebook.com/sharer/sharer.php?u=https://ad.' + state.settings.server + '/promo/wolves-share-' + persId,
-		},
-		{
-			id: 'vk',
-			link: 'https://vk.com/share.php?url=https://ad.' + state.settings.server + '/promo/wolves-share-' + persId,
-		}
-	];
-	updateState({shares: shares});	
-});
-
-listen(actions.PUBLIC_SHARE, (href) => {
-	window.open(	
-		href, 
-		'_blank', 
-		'scrollbars=0, resizable=1, menubar=0, left=100, top=100, width=550, height=440, toolbar=0, status=0'
-	);
 });
 
 //loader
@@ -177,23 +150,26 @@ listen(actions.SHOW_RESULTS, () => {
 		}
 	});
 
-	//get random pers if multiple
-	const persId = topAnswers.length > 1 ? shuffle(topAnswers)[0] : topAnswers[0];
-	const pers =  state.results[persId];
+	//get random result if multiple
+	const resultId = topAnswers.length > 1 ? shuffle(topAnswers)[0] : topAnswers[0];
+	const result =  state.results[resultId];
 
 	updateState({
-		pers: pers,
+		result: result,
 	});
 
-	emit(actions.SET_SHARES, pers.id);	
+	emit(actions.SET_SHARES, result.id);	
 
 	//preload image and show page
 	let image = new Image();
 	image.onload = () => {
-		emit(actions.HIDE_LOADER);
-		emit(actions.SHOW_PAGE, 'result');
+
+		setTimeout( () => {
+			emit(actions.HIDE_LOADER);
+			emit(actions.SHOW_PAGE, 'result');
+		}, 1000);
 	};
-	image.src = (state.settings.server === 'local' ? pers.image : pers.imageRemote);
+	image.src = (state.settings.server === 'local' ? result.image : result.imageRemote);
 });
 
 

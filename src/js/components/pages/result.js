@@ -23,45 +23,36 @@ const Result = React.createClass({
 
 	render: function() {
 
-		let { pers, server, shares } = this.props;
+		let { result, server, groupLink } = this.props;
 
 		return (
-			<div className="app__page answer" style={{backgroundImage: 'url(' + (server === 'local' ? pers.image : pers.imageRemote) + ')'}}>
-
-				<div className="app__content answer__content">
-
-					<h3 className="app__title answer__title">
-						{pers.name}
-					</h3>
+			<div className="answer">
 					
-					<div className="app__text answer__text text" dangerouslySetInnerHTML={{__html: pers.text }}>
+				<div className="answer__title-placeholder">
+					
+					<h3 className="answer__title">
+						{result.title} 
+					</h3>
+
+				</div>
+
+
+				<div className="answer__content">
+
+					<div className="answer__image-placeholder">
 						
+						<img src={(server === 'local' ? result.image : result.imageRemote)} alt="" className="answer__image" />
+
+					</div>
+					
+					<div className="answer__text text"
+						dangerouslySetInnerHTML={{__html: result.text }}>
 
 					</div>
 
-					<div className="app__button-placeholder">
+					<div className="answer__button-placeholder">
 						
-						<button className="button button--yellow button--m" onClick={this._gotoStart}>Пройти тест еще раз</button>
-
-					</div>
-
-					<div className="app__share share">
-						
-						<ul className="share__list">
-
-							{shares.map( (share) => (
-								<li className="share__item">
-						
-									<a 	href={share.link} 
-										className={('share__href share__href--' + share.id)}
-										onClick={this._share}
-										>
-									</a>
-						
-								</li> 
-							))}
-						
-						</ul> 
+						<a href={groupLink} className="button button--pink button--m">Вернуться в группу</a>
 
 					</div>
 

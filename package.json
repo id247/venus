@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "gulpfile.js",
-  "dependencies": {},
+  "dependencies": {
+    "rc-slider": "^3.6.0",
+    "react-range-slider": "^0.2.1",
+    "react-slider": "^0.6.1"
+  },
   "devDependencies": {
     "babel-core": "^5.8.34",
     "babel-eslint": "^6.0.2",

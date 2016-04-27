@@ -8,11 +8,10 @@ import { getState, addChangeListener } from './stores/store';
 
 //pages
 import Loading from './components/pages/loading';
-import Greeting from './components/pages/greeting';
 import ErrorPage from './components/pages/error';
 import Quiz from './components/pages/quiz';
 import Result from './components/pages/result';
-import Sex from './components/pages/sex';
+import Age from './components/pages/age';
 
 import 'babel-polyfill';
 
@@ -28,9 +27,10 @@ const app = (settings) => {
 			addChangeListener(this._update);
 
 			emit(actions.SET_SETTINGS, {
-				settings: this.props.settings,
-				page: 'greeting'			
+				settings: this.props.settings,		
 			});
+
+			emit(actions.SHOW_PAGE, 'age');
 		},
 		_update() {
 
@@ -43,10 +43,7 @@ const app = (settings) => {
 			let page;
 
 			switch(this.state.page){
-				case 'greeting': page = <Greeting />; 
-					break;
-
-				case 'sex': page = <Sex buttons={this.state.buttons} 	
+				case 'age': page = <Age 	
 										/>; 
 					break;
 
@@ -55,9 +52,9 @@ const app = (settings) => {
 											/>; 
 					break;
 
-				case 'result': page = <Result 	pers={this.state.pers}
+				case 'result': page = <Result 	result={this.state.result}
 												server={this.state.settings.server}
-												shares={this.state.shares}
+												groupLink={this.state.settings.groupLink}
 												/>; 
 					break;
 
@@ -65,9 +62,13 @@ const app = (settings) => {
 			}
 
 			return (
-				<div>
-					{page}
+				<div>					
 					<Loading show={this.state.loading} />
+					<div className="app__pages">
+						<div className="app__page">
+							{page}
+						</div>
+					</div>
 				</div>
 			)
 		}

@@ -31,53 +31,50 @@ const Quiz = React.createClass({
 		const { questions, step } = this.props;
 
 		return (
-			<div className="app__page">
 
-				<div className="app__content">
+			<div className="question">
 
-					<form action="#" onSubmit={this._answer}>
+				<form action="#" onSubmit={this._answer}>
 					
-						<div className="app__question question">
-							
-							<h3 className="question__title">
-								{questions[step].question}
-							</h3>
+					<div className={('question__title-placeholder question__title-placeholder--' + step)}>
 
-							<ul className="question__list">
+						<h3 className="question__title" 
+							dangerouslySetInnerHTML={{__html: questions[step].question }}>
+						</h3>
 
-								{shuffle(questions[step].answers).map( (answer, index) => (
-									<li className="question__item" key={(step + '-' + index)}>
-							
-										<label className="radio">
-											<input 	type="radio" 
-													name="answer"
-													className="radio__input" 
-													value={answer.id} 
-													required 
-													defaultChecked={Boolean(index === 0)} 
-													//onChange={this._setAnswer}
-													/>
-											<span className="radio__text">
-												{answer.text}
-											</span>
-										</label>
-							
-									</li> 
-								))}
-							
-							</ul> 
+					</div>
 
-						</div>
+					<ul className="question__list">
 
-						<div className="app__button-placeholder">
-							
-							<button type="submit" className="button button--yellow button--m">Далее</button>
+						{shuffle(questions[step].answers).map( (answer, index) => (
+							<li className="question__item" key={(step + '-' + index)}>
+					
+								<label className="radio">
+									<input 	type="radio" 
+											name="answer"
+											className="radio__input" 
+											value={answer.id} 
+											required 
+											defaultChecked={Boolean(index === 0)} 
+											//onChange={this._setAnswer}
+											/>
+									<span className="radio__text">
+										{answer.text}
+									</span>
+								</label>
+					
+							</li> 
+						))}
+					
+					</ul> 
 
-						</div>
+					<div className="question__button-placeholder">
+						
+						<button type="submit" className="button button--pink button--m">Далее</button>
 
-					</form>
+					</div>
 
-				</div>
+				</form>
 
 			</div>
 		);

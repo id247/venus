@@ -1,15 +1,43 @@
 @charset "UTF-8";
 
 @font-face {
-    font-family: 'Shadow';
-    src: url('../fonts/Shadow-Regular.woff') format('woff');
+    font-family: 'Helvetica Neue';
+    src: url('../fonts/HelveticaNeueCyr-Roman.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Helvetica Neue';
+    src: url('../fonts/HelveticaNeueCyr-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Helvetica Neue';
+    src: url('../fonts/HelveticaNeueCyr-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'LLLisa';
+    src: url('../fonts/LLLisa.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'Avant';
+    src: url('../fonts/aavantecpslcbrkhll.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
 
 
 $mainFontFamily: 'Helvetica Neue', Helvetica, sans-serif;
-$shadow: 'Shadow', sans-serif;
+$lisa: 'LLLisa', sans-serif;
+$avant: 'LLLisa', 'Avant', sans-serif;
 
 //
 //colors
@@ -17,7 +45,8 @@ $shadow: 'Shadow', sans-serif;
 
 $blue: #044073;
 $blue-light: #1162a7;
-$text: $blue;
+$text: #323232;
+$pink: #f1b0d1;
 
 //
 //medias
