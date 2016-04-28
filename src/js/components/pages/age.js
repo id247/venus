@@ -36,7 +36,7 @@ const Age = React.createClass({
 						<Slider 
 							defaultValue={12} 
 							min={12} 
-							max={16}
+							max={18}
 							/>
 
 					</div>
