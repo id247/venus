@@ -1,29 +1,23 @@
 import { listen, emit } from '../lib/dispatcher';
 import actions from '../lib/actions';
 
-//settings
-import questions from '../settings/questions';
-import results from '../settings/results';
-
 //helresult
 import { shuffle } from '../lib/helpers';
 
 let state = {
-	page: 'quiz',
+	page: '',
 	quiz: {
 		step : 0,
 		questionsCount: 0,	
 	},
 	quizAnswers: {},
 	sex: 'girl',
-	questions: questions,
-	results: results,
+	questions: {},
+	results: {},
 	result: {},
 	settings: {},
 	loading: false,
-	buttons: {
-		buttonNextDisabled: true
-	}
+	errorMessage: '',
 };
 
 const listeners = [];
@@ -49,20 +43,16 @@ function notify() {
 
 //settings
 listen(actions.SET_SETTINGS, (settings) => {
-	updateState(settings);	
-	notify();
-});
 
-
-//UI elements
-listen(actions.BUTTON_SEX_NEXT_ENABLE, (sex) => {
 	updateState({
-		buttons: Object.assign({}, state.buttons, {
-			buttonNextDisabled: false
-		})
+			settings: settings,
 	});	
+
 	notify();
+
+	emit(actions.QUIZ_SET_SETTINGS);
 });
+
 
 
 //sex
@@ -96,6 +86,51 @@ listen(actions.HIDE_LOADER, () => {
 
 
 //quiz
+listen(actions.QUIZ_SET_SETTINGS, () => {
+
+	emit(actions.SHOW_LOADER);
+
+	const timestamp = new Date().getTime();
+
+	let script = document.createElement('script');
+
+	script.onload = () => {
+
+		const quizSettings = __000__quizSettings;
+
+		updateState({
+			questions: quizSettings.questions,
+			results: quizSettings.results,
+		});	
+
+		emit(actions.SHOW_PAGE, 'age');
+
+		emit(actions.HIDE_LOADER);
+
+		notify();
+	}
+
+	script.onerror = () => {
+
+		
+		updateState({
+			errorMessage: 'Не удалось загрузить настройки приложения'
+		});	
+
+		emit(actions.SHOW_PAGE, 'error');
+
+		emit(actions.HIDE_LOADER);
+
+		notify();
+	}
+
+	script.src= state.settings.quizSettings + '?_v=' + timestamp;
+
+	document.body.appendChild(script);
+
+});
+
+
 listen(actions.QUIZ_START, () => {
 	updateState({
 		quiz: Object.assign({}, state.quiz,{

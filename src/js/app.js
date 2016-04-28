@@ -22,15 +22,15 @@ const app = (settings) => {
 
 			return getState();
 		},
+		componentWillMount() {
+
+			addChangeListener(this._update);	
+
+			emit(actions.SET_SETTINGS, this.props.settings);
+
+		},
 		componentDidMount() {
-
-			addChangeListener(this._update);
-
-			emit(actions.SET_SETTINGS, {
-				settings: this.props.settings,		
-			});
-
-			emit(actions.SHOW_PAGE, 'age');
+					
 		},
 		_update() {
 
@@ -58,7 +58,10 @@ const app = (settings) => {
 												/>; 
 					break;
 
-				default: page = <ErrorPage />;
+				case 'error': page = <ErrorPage errorMessage={this.state.errorMessage} />; 
+					break;
+
+				default: page = <ErrorPage errorMessage={this.state.errorMessage} />;
 			}
 
 			return (
