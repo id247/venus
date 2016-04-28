@@ -13,8 +13,6 @@ import Quiz from './components/pages/quiz';
 import Result from './components/pages/result';
 import Age from './components/pages/age';
 
-import 'babel-polyfill';
-
 const app = (settings) => {
 
 	const App = React.createClass({
